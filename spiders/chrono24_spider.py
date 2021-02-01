@@ -14,10 +14,10 @@ BaseUrl = 'https://www.chrono24.com/'
 
 class Chrono24SpiderSpider(scrapy.Spider):
     name = 'chrono24_spider'
-    start_urls = ['https://www.chrono24.fr/rolex/index.htm']
-                  #'https://www.chrono24.com/patekphilippe/index.htm',
-                  #'https://www.chrono24.com/audemarspiguet/index.htm',
-                  #'https://www.chrono24.com/richardmille/index.htm']
+    start_urls = ['https://www.chrono24.fr/rolex/index.htm'
+                  'https://www.chrono24.com/patekphilippe/index.htm',
+                  'https://www.chrono24.com/audemarspiguet/index.htm',
+                  'https://www.chrono24.com/richardmille/index.htm']
 
     
     def parse(self, response):
@@ -33,8 +33,6 @@ class Chrono24SpiderSpider(scrapy.Spider):
         for link in products_links:
             r1 = requests.get(link, headers=headers)
             soup = BeautifulSoup(r1.content, 'lxml')
-
-
             
             try:
                 name = soup.find('div', class_="media-flex-body").text.strip()
@@ -111,9 +109,9 @@ class Chrono24SpiderSpider(scrapy.Spider):
         
             yield items
         
-       # next_page = response.css('.paging-next').attrib['href']
-        #if next_page is not None:
-         #   yield response.follow(next_page, callback=self.parse)
+        next_page = response.css('.paging-next').attrib['href']
+        if next_page is not None:
+            yield response.follow(next_page, callback=self.parse)
 
  #brand       
 #In [4]: response.css('tr:nth-child(3) .text-link').css('::text').get().strip()
